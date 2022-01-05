@@ -1,0 +1,28 @@
+version: '3'
+services:
+  imdb-database:
+    container_name: imdb_database
+    image: mysql:latest
+    environment:
+      MYSQL_USER: ${IMDB_DATABASE_USER}
+      MYSQL_PASSWORD: ${IMDB_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${IMDB_DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${IMDB_DATABASE_NAME}
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - imdb-database:/var/lib/mysql
+  imdb-service:
+    container_name: imdb_service
+    image: imdb-service
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - imdb-database
+    ports:
+      - "8080:8080"
+    restart: always
+volumes:
+  imdb-database:

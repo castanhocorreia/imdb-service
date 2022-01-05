@@ -2,7 +2,6 @@ package br.com.ioasys.imdbservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,15 +14,14 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @RequiredArgsConstructor
-@Table(name = "directors")
+@Table(name = "genres")
 @ToString
 public class GenreModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(generator = "uuid2")
-  @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @Column(columnDefinition = "BINARY(16)")
+  @Column(columnDefinition = "BINARY(36)")
+  @GeneratedValue
   private UUID genreId;
 
   @Column(nullable = false)

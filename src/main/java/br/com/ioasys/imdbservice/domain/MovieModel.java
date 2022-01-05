@@ -1,12 +1,17 @@
 package br.com.ioasys.imdbservice.domain;
 
+import br.com.ioasys.imdbservice.util.YearAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -23,12 +28,18 @@ public class MovieModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(generator = "uuid2")
-  @GenericGenerator(name = "uuid2", strategy = "uuid2")
-  @Column(columnDefinition = "BINARY(16)")
+  @Column(columnDefinition = "BINARY(36)")
+  @GeneratedValue
   private UUID movieId;
 
-  private String name;
+  @Column(nullable = false)
+  private String title;
+
+  private String description;
+
+  @Column(columnDefinition = "smallint")
+  @Convert(converter = YearAttributeConverter.class)
+  private Year release;
 
   @JoinTable(
       inverseJoinColumns = @JoinColumn(name = "genre_id"),
@@ -46,7 +57,7 @@ public class MovieModel implements Serializable {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToMany(fetch = FetchType.LAZY)
   @ToString.Exclude
-  private Set<DirectorModel> directors;
+  private Set<PersonModel> directors;
 
   @JoinTable(
       inverseJoinColumns = @JoinColumn(name = "actor_id"),
@@ -55,7 +66,21 @@ public class MovieModel implements Serializable {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToMany(fetch = FetchType.LAZY)
   @ToString.Exclude
-  private Set<ActorModel> actors;
+  private Set<PersonModel> actors;
+
+  @Fetch(FetchMode.SUBSELECT)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+  @ToString.Exclude
+  private Set<RatingModel> ratings;
+
+  @Column(nullable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", shape = JsonFormat.Shape.STRING)
+  private LocalDateTime createdDate;
+
+  @Column(nullable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", shape = JsonFormat.Shape.STRING)
+  private LocalDateTime lastModifiedDate;
 
   @Override
   public boolean equals(Object object) {
@@ -68,5 +93,9 @@ public class MovieModel implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(movieId);
+  }
+
+  public double getAverageRating() {
+    return this.ratings.stream().mapToDouble(RatingModel::getStars).average().orElse(0.0);
   }
 }
