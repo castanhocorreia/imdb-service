@@ -1,12 +1,12 @@
 CREATE TABLE users
 (
-    user_id            BINARY(36)   NOT NULL,
-    full_name          VARCHAR(255) NOT NULL,
-    username           VARCHAR(255) NOT NULL,
-    password           VARCHAR(255) NOT NULL,
-    status             VARCHAR(16)  NOT NULL,
-    created_date       datetime     NOT NULL,
-    last_modified_date datetime     NOT NULL,
+    user_id            UUID                        NOT NULL,
+    full_name          VARCHAR(255)                NOT NULL,
+    username           VARCHAR(255)                NOT NULL,
+    password           VARCHAR(255)                NOT NULL,
+    status             VARCHAR(16)                 NOT NULL,
+    created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    last_modified_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (user_id)
 );
 
@@ -17,20 +17,20 @@ ALTER TABLE users
 
 CREATE TABLE roles
 (
-    role_id BINARY(36)  NOT NULL,
-    name    VARCHAR(36) NOT NULL,
+    role_id UUID        NOT NULL,
+    name    VARCHAR(16) NOT NULL,
     CONSTRAINT pk_roles PRIMARY KEY (role_id)
 );
 
 ALTER TABLE roles
-    ADD CONSTRAINT uc_roles_role UNIQUE (name);
+    ADD CONSTRAINT uc_roles_name UNIQUE (name);
 
 /* ------------------------------------------------------------------------------------------------------ */
 
 CREATE TABLE users_roles
 (
-    user_id BINARY(36) NOT NULL,
-    role_id BINARY(36) NOT NULL,
+    user_id UUID NOT NULL,
+    role_id UUID NOT NULL,
     CONSTRAINT pk_users_roles PRIMARY KEY (user_id, role_id)
 );
 
@@ -44,7 +44,7 @@ ALTER TABLE users_roles
 
 CREATE TABLE genres
 (
-    genre_id BINARY(36)   NOT NULL,
+    genre_id UUID         NOT NULL,
     genre    VARCHAR(255) NOT NULL,
     CONSTRAINT pk_genres PRIMARY KEY (genre_id)
 );
@@ -53,13 +53,11 @@ CREATE TABLE genres
 
 CREATE TABLE people
 (
-    person_id          BINARY(36)   NOT NULL,
-    full_name          VARCHAR(255) NOT NULL,
-    bio                VARCHAR(255) NULL,
-    birth_date         date         NULL,
-    death_date         date         NULL,
-    created_date       datetime     NOT NULL,
-    last_modified_date datetime     NOT NULL,
+    person_id  UUID         NOT NULL,
+    full_name  VARCHAR(255) NOT NULL,
+    bio        VARCHAR(255),
+    birth_date date,
+    death_date date,
     CONSTRAINT pk_people PRIMARY KEY (person_id)
 );
 
@@ -67,12 +65,13 @@ CREATE TABLE people
 
 CREATE TABLE movies
 (
-    movie_id           BINARY(36)   NOT NULL,
-    title              VARCHAR(255) NOT NULL,
-    `description`      VARCHAR(255) NULL,
-    `release`          SMALLINT     NULL,
-    created_date       datetime     NOT NULL,
-    last_modified_date datetime     NOT NULL,
+    movie_id           UUID                        NOT NULL,
+    title              VARCHAR(255)                NOT NULL,
+    description        VARCHAR(255),
+    release            SMALLINT,
+    average_rating     DOUBLE PRECISION,
+    created_date       TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    last_modified_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT pk_movies PRIMARY KEY (movie_id)
 );
 
@@ -80,10 +79,10 @@ CREATE TABLE movies
 
 CREATE TABLE ratings
 (
-    rating_id BINARY(36) NOT NULL,
-    movie_id  BINARY(36) NOT NULL,
-    user_id   BINARY(36) NOT NULL,
-    stars     DOUBLE     NULL,
+    rating_id UUID    NOT NULL,
+    movie_id  UUID    NOT NULL,
+    user_id   UUID    NOT NULL,
+    stars     INTEGER NOT NULL,
     CONSTRAINT pk_ratings PRIMARY KEY (rating_id)
 );
 
@@ -97,8 +96,8 @@ ALTER TABLE ratings
 
 CREATE TABLE movies_genres
 (
-    movie_id BINARY(36) NOT NULL,
-    genre_id BINARY(36) NOT NULL,
+    movie_id UUID NOT NULL,
+    genre_id UUID NOT NULL,
     CONSTRAINT pk_movies_genres PRIMARY KEY (movie_id, genre_id)
 );
 
@@ -112,8 +111,8 @@ ALTER TABLE movies_genres
 
 CREATE TABLE movies_directors
 (
-    movie_id    BINARY(36) NOT NULL,
-    director_id BINARY(36) NOT NULL,
+    movie_id    UUID NOT NULL,
+    director_id UUID NOT NULL,
     CONSTRAINT pk_movies_directors PRIMARY KEY (movie_id, director_id)
 );
 
@@ -127,9 +126,9 @@ ALTER TABLE movies_directors
 
 CREATE TABLE movies_actors
 (
-    movie_id BINARY(36) NOT NULL,
-    actor_id BINARY(36) NOT NULL,
-    CONSTRAINT pk_movies_directors PRIMARY KEY (movie_id, actor_id)
+    movie_id UUID NOT NULL,
+    actor_id UUID NOT NULL,
+    CONSTRAINT pk_movies_actors PRIMARY KEY (movie_id, actor_id)
 );
 
 ALTER TABLE movies_actors
@@ -137,10 +136,3 @@ ALTER TABLE movies_actors
 
 ALTER TABLE movies_actors
     ADD CONSTRAINT fk_actors_on_movies_actors FOREIGN KEY (actor_id) REFERENCES people (person_id);
-
-/* ------------------------------------------------------------------------------------------------------ */
-
-insert into roles
-values ('3f06af63a93c11e4979700505690773f', 'ADMIN');
-insert into roles
-values ('3f06af63a93c11e4979700505690773a', 'USER');
