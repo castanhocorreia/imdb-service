@@ -59,21 +59,31 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Optional<UserModel> find(String username) {
+    return userRepository.findByUsername(username);
+  }
+
+  @Override
   public Page<UserModel> list(Specification<UserModel> spec, Pageable pageable) {
-    return userRepository.findAll(spec, pageable);
+    return userRepository.findAllActiveUsers(spec, pageable);
   }
 
   @Override
   public UserModel update(UserData userData, UserModel userModel) {
     BeanUtils.copyProperties(
         userData, userModel, PropertyValueRejector.rejectEmptyValues(userData));
+    if (userData.getPassword() != null) {
+      userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+    }
     userModel.setLastModifiedDate(LocalDateTime.now(ZoneId.of("UTC")));
     return userRepository.save(userModel);
   }
 
   @Override
   public void delete(UserModel userModel) {
-    userRepository.delete(userModel);
+    userModel.setStatus(UserStatus.INACTIVE);
+    userModel.setLastModifiedDate(LocalDateTime.now(ZoneId.of("UTC")));
+    userRepository.save(userModel);
   }
 
   @Override

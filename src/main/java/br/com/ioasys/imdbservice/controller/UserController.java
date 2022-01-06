@@ -13,6 +13,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,11 +31,25 @@ public class UserController {
   private static final String USER_NOT_FOUND = "User with id %s not found";
   private static final String USER_UPDATED_SUCCESSFULLY = "User with id {} updated successfully";
 
+  private final PasswordEncoder passwordEncoder;
   private final UserService userService;
 
   @Autowired
-  public UserController(UserService userService) {
+  public UserController(PasswordEncoder passwordEncoder, UserService userService) {
+    this.passwordEncoder = passwordEncoder;
     this.userService = userService;
+  }
+
+  @GetMapping()
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public ResponseEntity<Page<UserModel>> index(
+      SpecTemplate.UserSpec spec,
+      @PageableDefault(sort = "username", direction = Sort.Direction.ASC) Pageable pageable,
+      Authentication authentication) {
+    UserDetails userDetails = (UserModel) authentication.getPrincipal();
+    log.info("Authentication {}", userDetails.getUsername());
+    Page<UserModel> userPage = userService.list(spec, pageable);
+    return ResponseEntity.status(HttpStatus.OK).body(userPage);
   }
 
   @GetMapping(path = "/{userId}")
@@ -45,20 +63,12 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(user);
   }
 
-  @GetMapping()
-  public ResponseEntity<Page<UserModel>> index(
-      SpecTemplate.UserSpec spec,
-      @PageableDefault(sort = "createdDate", direction = Sort.Direction.ASC) Pageable pageable) {
-    Page<UserModel> userPage = userService.list(spec, pageable);
-    return ResponseEntity.status(HttpStatus.OK).body(userPage);
-  }
-
   @PutMapping(path = "/{userId}")
   public ResponseEntity<Object> update(
       @PathVariable UUID userId,
       @RequestBody
-          @Validated(UserData.UserView.GeneralUpdate.class)
-          @JsonView(UserData.UserView.GeneralUpdate.class)
+          @Validated(UserData.UserView.Update.class)
+          @JsonView(UserData.UserView.Update.class)
           UserData userData) {
     log.info(
         "New PUT request to update user with id {} with the followiing data {}",
@@ -78,8 +88,8 @@ public class UserController {
   public ResponseEntity<Object> updatePassword(
       @PathVariable UUID userId,
       @RequestBody
-          @Validated(UserData.UserView.PasswordUpdate.class)
-          @JsonView(UserData.UserView.PasswordUpdate.class)
+          @Validated(UserData.UserView.Password.class)
+          @JsonView(UserData.UserView.Password.class)
           UserData userData) {
     log.info("New PUT request to update password of user with id {}", userId);
     Optional<UserModel> userOptional = userService.find(userId);
@@ -88,7 +98,7 @@ public class UserController {
           .body(String.format(USER_NOT_FOUND, userId));
     }
     UserModel user = userOptional.get();
-    if (!user.getPassword().equals(userData.getPreviousPassword())) {
+    if (!passwordEncoder.matches(userData.getPreviousPassword(), user.getPassword())) {
       log.info("Mismatched previous password for user with id {}", user.getUserId());
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Mismatched previous password");
     }
@@ -98,16 +108,19 @@ public class UserController {
   }
 
   @DeleteMapping(path = "/{userId}")
-  public ResponseEntity<Object> delete(@PathVariable UUID userId) {
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public ResponseEntity<Object> delete(@PathVariable UUID userId, Authentication authentication) {
     log.info("New DELETE request for user with id {}", userId);
+    UserDetails userDetails = (UserModel) authentication.getPrincipal();
+    log.info("Authentication {}", userDetails.getUsername());
     Optional<UserModel> userOptional = userService.find(userId);
     if (userOptional.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
           .body(String.format(USER_NOT_FOUND, userId));
     }
     userService.delete(userOptional.get());
-    log.info("User with id {} deleted successfully", userId);
+    log.info("User with id {} deativacted successfully", userId);
     return ResponseEntity.status(HttpStatus.OK)
-        .body(String.format("User with id %s deleted successfully", userId));
+        .body(String.format("User with id %s deativacted successfully", userId));
   }
 }

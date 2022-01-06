@@ -16,6 +16,8 @@ public interface UserService {
 
   Optional<UserModel> find(UUID id);
 
+  Optional<UserModel> find(String username);
+
   Page<UserModel> list(Specification<UserModel> spec, Pageable pageable);
 
   @Transactional

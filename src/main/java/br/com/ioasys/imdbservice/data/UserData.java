@@ -14,43 +14,45 @@ import java.util.UUID;
 public class UserData {
   private UUID userId;
 
-  @JsonView({UserView.GeneralUpdate.class, UserView.RegularSignUp.class})
+  @JsonView({UserView.Update.class, UserView.SignUp.class})
   @NotBlank(
-      groups = {UserView.GeneralUpdate.class, UserView.RegularSignUp.class},
+      groups = {UserView.Update.class, UserView.SignUp.class},
       message = "Ensure that the fullName included in the request are not blank")
   private String fullName;
 
-  @JsonView({UserView.GeneralUpdate.class, UserView.RegularSignUp.class})
+  @JsonView({UserView.Update.class, UserView.Login.class, UserView.SignUp.class})
   @UsernameConstraint(
-      groups = {UserView.GeneralUpdate.class, UserView.RegularSignUp.class},
+      groups = {UserView.Update.class, UserView.Login.class, UserView.SignUp.class},
       message = "Ensure that the username included in the request are correct")
   private String username;
 
-  @JsonView({UserView.RegularSignUp.class, UserView.PasswordUpdate.class})
+  @JsonView({UserView.SignUp.class, UserView.Login.class, UserView.Password.class})
   @NotBlank(
-      groups = {UserView.RegularSignUp.class, UserView.PasswordUpdate.class},
+      groups = {UserView.SignUp.class, UserView.Login.class, UserView.Password.class},
       message = "Ensure that the password included in the request are not blank")
   @Size(
-      groups = {UserView.RegularSignUp.class, UserView.PasswordUpdate.class},
+      groups = {UserView.SignUp.class, UserView.Login.class, UserView.Password.class},
       min = 6,
-      message = "The new password must contain the minimum number of 6 characters")
+      message = "The password must contain the minimum number of 6 characters")
   private String password;
 
-  @JsonView({UserView.PasswordUpdate.class})
+  @JsonView({UserView.Password.class})
   @NotBlank(
-      groups = {UserView.PasswordUpdate.class},
+      groups = {UserView.Password.class},
       message = "Ensure that the previous password included in the request are not blank")
   @Size(
-      groups = {UserView.PasswordUpdate.class},
+      groups = {UserView.Password.class},
       min = 6,
       message = "The new password must contain the minimum number of 6 characters")
   private String previousPassword;
 
   public interface UserView {
-    interface GeneralUpdate {}
+    interface Login {}
 
-    interface RegularSignUp {}
+    interface Password {}
 
-    interface PasswordUpdate {}
+    interface SignUp {}
+
+    interface Update {}
   }
 }

@@ -9,6 +9,7 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
 public class SpecTemplate {
+  @And({@Spec(path = "title", spec = Like.class)})
   public interface MovieSpec extends Specification<MovieModel> {}
 
   @And({@Spec(path = "fullName", spec = Like.class), @Spec(path = "username", spec = Equal.class)})

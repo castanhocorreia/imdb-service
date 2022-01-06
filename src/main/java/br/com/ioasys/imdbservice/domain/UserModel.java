@@ -27,8 +27,7 @@ public class UserModel implements Serializable, UserDetails {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @Column(columnDefinition = "BINARY(36)")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID userId;
 
   @Column(nullable = false)
@@ -51,7 +50,7 @@ public class UserModel implements Serializable, UserDetails {
       joinColumns = @JoinColumn(name = "user_id"),
       name = "users_roles")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @ToString.Exclude
   private Set<RoleModel> roles = new HashSet<>();
 
