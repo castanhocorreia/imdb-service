@@ -1,0 +1,443 @@
+{
+	"info": {
+		"_postman_id": "6ceb0fc5-6042-4b86-a928-1b3d3185eba9",
+		"name": "IMDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ADMIN",
+			"item": [
+				{
+					"name": "lista todos usuários excluindo admins",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNDk3MzczLCJleHAiOjE2NDE1MTE3NzN9.houpQ4dIL7BZbJhewnRt9J5nMuIYn-N_zvo3CqRD3S0SrZwmu6l3IWwMvilYX0_coxzV4tOmaZXho1yzZMHM1w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login no usuário admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"castanhocorreia\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cadastra um novo filme",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNDk2ODc1LCJleHAiOjE2NDE1MTEyNzV9.EyTXK1SANZ1JkZYRrPS-pHizkX-5eAz2bSIUrTmXgdM-YRZPKyZFgzKtAVHpwfeoe3u5c9oMbpPZ6uH-S-5MMA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Don't Look Up\",\n    \"release\": \"2021\",\n    \"actors\": [\"Leonardo DiCaprio\", \"Jennifer Lawrence\"],\n    \"directors\": [\"Adam McKay\"],\n    \"genres\": [\"COMEDY\", \"DRAMA\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "dá nota para um filme por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkNWU5MjUxMi04MjZlLTQ0NTctOTYxMi1mNjJlNjdkY2RiM2UiLCJyb2xlcyI6IlVTRVIiLCJpYXQiOjE2NDE0OTkyODIsImV4cCI6MTY0MTUxMzY4Mn0.huh2sRZmQhfu29YAicyjhfTysRq2ybBy43tF6BYlcH5U8E_IXJJ2ypSdMZ-GVfZem-K9R6kKVD8KOG-LdGp6mg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies/0c845c4b-f4d0-4dbd-933e-22c6c4d11897/vote/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"0c845c4b-f4d0-4dbd-933e-22c6c4d11897",
+								"vote",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login como usuário padrão",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"gilsonvilelajr\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GERAL",
+			"item": [
+				{
+					"name": "exclui logicamente um usuário por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNTAwMjExLCJleHAiOjE2NDE1MTQ2MTF9.R4oarBo9wedKWTpZM4diUgIBjYROr_etyX2H_HI22T5ctlQar37FcVOQN39_RO6pZuMRQ7tEbHhQkqzpa9AgaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/d5e92512-826e-4457-9612-f62e67dcdb3e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"d5e92512-826e-4457-9612-f62e67dcdb3e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "carrega filme por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNTAwMjExLCJleHAiOjE2NDE1MTQ2MTF9.R4oarBo9wedKWTpZM4diUgIBjYROr_etyX2H_HI22T5ctlQar37FcVOQN39_RO6pZuMRQ7tEbHhQkqzpa9AgaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies/0c845c4b-f4d0-4dbd-933e-22c6c4d11897",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"0c845c4b-f4d0-4dbd-933e-22c6c4d11897"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "carrega filme por nome",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNTAwMjExLCJleHAiOjE2NDE1MTQ2MTF9.R4oarBo9wedKWTpZM4diUgIBjYROr_etyX2H_HI22T5ctlQar37FcVOQN39_RO6pZuMRQ7tEbHhQkqzpa9AgaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies?title=Rings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Rings"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista todos os filmes por ordem alfabética",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNDk3MzczLCJleHAiOjE2NDE1MTE3NzN9.houpQ4dIL7BZbJhewnRt9J5nMuIYn-N_zvo3CqRD3S0SrZwmu6l3IWwMvilYX0_coxzV4tOmaZXho1yzZMHM1w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies/alphabetical",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"alphabetical"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lista todos os filmes por classificação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkNWU5MjUxMi04MjZlLTQ0NTctOTYxMi1mNjJlNjdkY2RiM2UiLCJyb2xlcyI6IlVTRVIiLCJpYXQiOjE2NDE0OTkyMTIsImV4cCI6MTY0MTUxMzYxMn0.LQ-io17d4t4afBzldz_xqgrT72E3znMmRtyasxz9DsLNXOjLYEqxgH-AGqm-V3DnX-2X1Pnu1dNfVSjTs3p8MA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cria novo usuário padrão",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"gsbazanelli\",\n    \"fullName\": \"Gabriela Bazanelli\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "atualiza os dados de um usuário por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNTAwMjExLCJleHAiOjE2NDE1MTQ2MTF9.R4oarBo9wedKWTpZM4diUgIBjYROr_etyX2H_HI22T5ctlQar37FcVOQN39_RO6pZuMRQ7tEbHhQkqzpa9AgaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Walter Galvão Neto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/1c0d4d57-40e5-4410-801c-f54864c89d4e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1c0d4d57-40e5-4410-801c-f54864c89d4e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "atualiza a senha de um usuário por id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlNTFlM2RlYi0xMzY1LTRmNDQtODFjMC00ZWZjNzg3NDg1ZDYiLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjQxNTAwMjExLCJleHAiOjE2NDE1MTQ2MTF9.R4oarBo9wedKWTpZM4diUgIBjYROr_etyX2H_HI22T5ctlQar37FcVOQN39_RO6pZuMRQ7tEbHhQkqzpa9AgaA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"previousPassword\": \"123456\",\n    \"password\": \"ioasys\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/1c0d4d57-40e5-4410-801c-f54864c89d4e/password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1c0d4d57-40e5-4410-801c-f54864c89d4e",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

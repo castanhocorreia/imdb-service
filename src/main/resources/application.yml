@@ -1,7 +1,10 @@
+jwt:
+  expiration: 14400000
+  secret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/imdb
-    username: root
+    url: jdbc:postgresql://localhost:5432/imdb
+    username: ioasys
     password: ioasys
   flyway:
     enabled: on
@@ -9,13 +12,14 @@ spring:
   jpa:
     hibernate:
       ddlAuto: validate
-    openInView: false
+    openInView: true
     properties:
       hibernate:
+        formatSql: true
         jdbc:
           lob:
             nonContextualCreation: true
-        showSql: true
+      showSql: true
   main:
     bannerMode: off
   mvc:
@@ -24,6 +28,3 @@ spring:
   output:
     ansi:
       enabled: always
-
-
-
