@@ -2,17 +2,14 @@ version: '3'
 services:
   imdb-database:
     container_name: imdb_database
-    image: mysql:latest
+    image: postgres:14-alpine
     environment:
-      MYSQL_USER: ${IMDB_DATABASE_USER}
-      MYSQL_PASSWORD: ${IMDB_DATABASE_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${IMDB_DATABASE_PASSWORD}
-      MYSQL_DATABASE: ${IMDB_DATABASE_NAME}
+      POSTGRES_USER: ioasys
+      POSTGRES_PASSWORD: ioasys
+      POSTGRES_DB: imdb
     restart: always
     ports:
-      - "3306:3306"
-    volumes:
-      - imdb-database:/var/lib/mysql
+      - "5432:5432"
   imdb-service:
     container_name: imdb_service
     image: imdb-service
@@ -24,5 +21,5 @@ services:
     ports:
       - "8080:8080"
     restart: always
-volumes:
-  imdb-database:
+    links:
+      - imdb-database

@@ -98,5 +98,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>imdb-service</finalName>
     </build>
 </project>

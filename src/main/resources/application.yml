@@ -3,7 +3,7 @@ jwt:
   secret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/imdb
+    url: jdbc:postgresql://imdb_database:5432/imdb
     username: ioasys
     password: ioasys
   flyway:

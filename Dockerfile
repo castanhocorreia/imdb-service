@@ -1,9 +1,6 @@
-FROM maven:3.6.3 AS maven
-WORKDIR /usr/src/app
-COPY . /usr/src/app
-RUN mvn package
-FROM adoptopenjdk/openjdk11:alpine-jre
-ARG JAR_FILE=imdb-service.jar
-WORKDIR /opt/app
-COPY --from=maven /usr/src/app/target/${JAR_FILE} /opt/app/
-ENTRYPOINT ["java","-jar","imdb-service.jar.jar"]
+FROM openjdk:11-jre-slim
+WORKDIR /opt/imdb-service
+COPY /target/imdb-service.jar .
+SHELL ["/bin/sh", "-c"]
+EXPOSE 8080
+CMD java -jar imdb-service.jar
