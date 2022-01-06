@@ -7,13 +7,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
 @Entity
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
 @Setter
 @RequiredArgsConstructor
 @Table(name = "people")
@@ -22,11 +22,11 @@ public class PersonModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @Column(columnDefinition = "BINARY(36)")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID personId;
 
   @Column(nullable = false)
+  @NonNull
   private String fullName;
 
   private String bio;
@@ -36,12 +36,4 @@ public class PersonModel implements Serializable {
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate deathDate;
-
-  @Column(nullable = false)
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", shape = JsonFormat.Shape.STRING)
-  private LocalDateTime createdDate;
-
-  @Column(nullable = false)
-  @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", shape = JsonFormat.Shape.STRING)
-  private LocalDateTime lastModifiedDate;
 }

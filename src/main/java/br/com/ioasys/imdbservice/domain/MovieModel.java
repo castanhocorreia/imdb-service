@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -28,14 +29,11 @@ public class MovieModel implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @Column(columnDefinition = "BINARY(36)")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID movieId;
 
   @Column(nullable = false)
   private String title;
-
-  private String description;
 
   @Column(columnDefinition = "smallint")
   @Convert(converter = YearAttributeConverter.class)
@@ -45,34 +43,33 @@ public class MovieModel implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "genre_id"),
       joinColumns = @JoinColumn(name = "movie_id"),
       name = "movies_genres")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @ToString.Exclude
-  private Set<GenreModel> genres;
+  private Set<GenreModel> genres = new HashSet<>();
 
   @JoinTable(
       inverseJoinColumns = @JoinColumn(name = "director_id"),
       joinColumns = @JoinColumn(name = "movie_id"),
       name = "movies_directors")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @ToString.Exclude
-  private Set<PersonModel> directors;
+  private Set<PersonModel> directors = new HashSet<>();
 
   @JoinTable(
       inverseJoinColumns = @JoinColumn(name = "actor_id"),
       joinColumns = @JoinColumn(name = "movie_id"),
       name = "movies_actors")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.EAGER)
   @ToString.Exclude
-  private Set<PersonModel> actors;
+  private Set<PersonModel> actors = new HashSet<>();
+
+  private double averageRating = 0.0;
 
   @Fetch(FetchMode.SUBSELECT)
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "movie")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "movie")
   @ToString.Exclude
-  private Set<RatingModel> ratings;
+  private Set<RatingModel> ratings = new HashSet<>();
 
   @Column(nullable = false)
   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", shape = JsonFormat.Shape.STRING)
@@ -93,9 +90,5 @@ public class MovieModel implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(movieId);
-  }
-
-  public double getAverageRating() {
-    return this.ratings.stream().mapToDouble(RatingModel::getStars).average().orElse(0.0);
   }
 }
